@@ -25,6 +25,12 @@ class Settings(BaseSettings):
     supabase_jwt_secret: str
     supabase_service_role_key: str
 
+    resend_api_key: str | None = None
+    resend_from_email: str | None = None
+    admin_emails: Annotated[list[str], NoDecode] = Field(default_factory=list)
+    unsubscribe_secret: str | None = None
+    public_api_base_url: str = "http://localhost:8000"
+
     environment: Environment = "development"
     log_level: str = "INFO"
 
@@ -32,11 +38,11 @@ class Settings(BaseSettings):
         default_factory=lambda: ["http://localhost:3000"]
     )
 
-    @field_validator("cors_origins", mode="before")
+    @field_validator("cors_origins", "admin_emails", mode="before")
     @classmethod
     def _split_csv(cls, v: object) -> object:
         if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",") if origin.strip()]
+            return [item.strip() for item in v.split(",") if item.strip()]
         return v
 
     @field_validator("database_url")

@@ -16,6 +16,7 @@ from standfast.core.database import Base
 # Import feature models so they're registered on Base.metadata before autogenerate.
 # Add new feature model modules here as they're created.
 from standfast.features.account import models as _account_models  # noqa: F401
+from standfast.features.broadcasts import models as _broadcasts_models  # noqa: F401
 
 config = context.config
 if config.config_file_name is not None:
