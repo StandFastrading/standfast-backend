@@ -7,6 +7,7 @@ from fastapi import APIRouter
 from . import (
     account,
     analytics,
+    beta,
     broadcasts,
     desk,
     journal,
@@ -18,6 +19,7 @@ from . import (
 
 api_v1_router = APIRouter()
 api_v1_router.include_router(account.router, prefix="/account", tags=["account"])
+api_v1_router.include_router(beta.router, prefix="/beta", tags=["beta"])
 api_v1_router.include_router(onboarding.router, prefix="/onboarding", tags=["onboarding"])
 api_v1_router.include_router(rules_risk.router, prefix="/rules-risk", tags=["rules-risk"])
 api_v1_router.include_router(desk.router, prefix="/desk", tags=["desk"])
