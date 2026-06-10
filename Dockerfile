@@ -16,10 +16,13 @@ WORKDIR /app
 COPY pyproject.toml uv.lock* ./
 RUN uv sync --frozen --no-install-project --no-dev
 
-# Copy the source and install the project itself
+# Copy the source and install the project itself. README.md is required because
+# pyproject.toml declares `readme = "README.md"`, which hatchling reads when it
+# builds the local package during `uv sync` below.
 COPY src ./src
 COPY alembic.ini ./
 COPY alembic ./alembic
+COPY README.md ./
 RUN uv sync --frozen --no-dev
 
 ENV PATH="/opt/venv/bin:$PATH"
