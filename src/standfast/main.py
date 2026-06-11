@@ -6,8 +6,9 @@ Run locally:
 
 from __future__ import annotations
 
-from contextlib import asynccontextmanager
+import os
 from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,6 +30,19 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 def create_app() -> FastAPI:
     settings = get_settings()
 
+    # TEMP CORS DEBUG — remove after diagnosing the allowed-origins mismatch.
+    print(
+        f"[CORS-DEBUG] raw os.environ['CORS_ORIGINS']="
+        f"{os.environ.get('CORS_ORIGINS')!r}",
+        flush=True,
+    )
+    print(
+        f"[CORS-DEBUG] parsed settings.cors_origins={settings.cors_origins!r} "
+        f"(type={type(settings.cors_origins).__name__}, "
+        f"count={len(settings.cors_origins)})",
+        flush=True,
+    )
+
     app = FastAPI(
         title="Standfast API",
         version="0.1.0",
@@ -43,6 +57,11 @@ def create_app() -> FastAPI:
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
+    )
+    print(
+        f"[CORS-DEBUG] allow_origins passed to CORSMiddleware="
+        f"{settings.cors_origins!r}",
+        flush=True,
     )
 
     register_exception_handlers(app)
