@@ -72,6 +72,20 @@ def create_app() -> FastAPI:
     async def health() -> dict[str, str]:
         return {"status": "ok"}
 
+    # TEMP diagnostic — reports what THIS serving instance actually loaded, so we
+    # can read it via the public URL instead of guessing from the dashboard.
+    @app.get("/debug/cors", tags=["meta"])
+    async def debug_cors() -> dict[str, str | list[str] | None]:
+        return {
+            "cors_origins": settings.cors_origins,
+            "raw_env_CORS_ORIGINS": os.environ.get("CORS_ORIGINS"),
+            "railway_service": os.environ.get("RAILWAY_SERVICE_NAME"),
+            "railway_environment": os.environ.get("RAILWAY_ENVIRONMENT_NAME"),
+            "railway_commit": os.environ.get("RAILWAY_GIT_COMMIT_SHA"),
+            "railway_deployment_id": os.environ.get("RAILWAY_DEPLOYMENT_ID"),
+            "railway_replica_id": os.environ.get("RAILWAY_REPLICA_ID"),
+        }
+
     return app
 
 
